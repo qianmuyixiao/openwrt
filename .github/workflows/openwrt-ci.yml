@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: 19.07
 
       - name: Space cleanup
         env:
@@ -74,6 +74,13 @@ jobs:
           #这是openclash插件的最新库地址
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+      
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       
       - name: Generate configuration file
         run: |
